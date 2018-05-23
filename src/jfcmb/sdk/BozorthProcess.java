@@ -16,18 +16,17 @@ import javax.swing.JOptionPane;
  * Responsible for executing operations of the <code>Bozorth3</code> program.
  *
  * @author Derick Felix
+ * @author Samuelson
  */
 public class BozorthProcess {
-    
+
     private String template1, template2;
-    
-    public void templateCompare(String template1, String template2){
+
+    public void templateCompare(String template1, String template2) {
         this.template1 = template1;
         this.template2 = template2;
     }
 
-    
-    
     /**
      * Starts the <code>Bozorth3</code> program, it's responsible for making
      * one-to-one and one-to-many fingerprint matching
@@ -36,20 +35,20 @@ public class BozorthProcess {
      * @throws jfcmb.sdk.FcmbException
      */
     public String start() throws FcmbException {
-        String path = "c:/fcmb";
-        File executable = new File(path + "/exec");
-        String[] command = {"c:/fcmb/exec/bozorth3.exe", "c:/fingerprints/"+this.template1+".xyt", "c:/fingerprints/"+this.template2+".xyt"};
+
+        File executableFingers = new File("fcmb\\tmp");
+        File executable = new File("fcmb\\exec");
+        System.out.println(executableFingers.getAbsolutePath());
+        String[] command = {executable.getAbsolutePath()+"\\bozorth3.exe", executableFingers.getAbsolutePath()+"\\" + this.template1 + ".xyt", executableFingers.getAbsolutePath()+"\\" + this.template2 + ".xyt"};
 
         try {
 
             Process process = Runtime.getRuntime().exec(command, null, executable);
-            
-//            List<String> output = getOutput(process.getInputStream());
+
             if (printOutput(process.getInputStream())) {
                 throw new FcmbException("Falha ao se comunicar com o leitor");
             }
 
-            
         } catch (IOException e) {
             Logger.getLogger(getClass().getName()).log(Level.SEVERE,
                     "Failed to execute Bozorth3 program", e);
@@ -109,20 +108,19 @@ public class BozorthProcess {
     private boolean printOutput(InputStream inputStream) throws IOException {
         InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
         try (BufferedReader bufferedReader = new BufferedReader(inputStreamReader)) {
-            
+
             String line = bufferedReader.readLine();
-            
+            System.out.println(line);
             Integer score = Integer.valueOf(line);
-            
-            if(score > 25){
+
+            if (score > 25) {
                 System.out.println("Digitais são iguais");
                 JOptionPane.showMessageDialog(null, "São iguais");
-            }else{
+            } else {
                 System.out.println("Digitais diferentes");
-                JOptionPane.showMessageDialog(null, "São diferente");
+                JOptionPane.showMessageDialog(null, "São diferentes");
             }
-            
-            
+
             inputStreamReader.close();
             bufferedReader.close();
         }

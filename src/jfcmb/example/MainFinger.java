@@ -3,13 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package jfmb.example;
+package jfcmb.example;
 
 import jfcmb.sdk.BozorthProcess;
 import jfcmb.sdk.FcmbProcess;
 import jfcmb.sdk.FcmbException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *

@@ -13,6 +13,8 @@ import java.util.logging.Logger;
  * Responsible for executing operations of the <code>Fcmb</code> program.
  *
  * @author Derick Felix
+ * @author Samuelson
+ *
  */
 public class FcmbProcess {
 
@@ -21,7 +23,7 @@ public class FcmbProcess {
     public void setNameTemplate(String nameTemplate) {
         this.nameTemplate = nameTemplate;
     }
-    
+
     /**
      * Starts the <code>fcmb</code> program, it's responsible for communicating
      * with a fingerprint scanner and reading the image into a bitmap, and also
@@ -29,12 +31,11 @@ public class FcmbProcess {
      *
      * @throws jfcmb.sdk.FcmbException
      */
-    public void start() throws FcmbException
-    {
+    public void start() throws FcmbException {
         String path = "c:";
-        File executable = new File(path + "/fcmb");
-        String[] command = {path + "/fcmb/fcmb.exe", path + "/fingerprints", this.nameTemplate};
-
+        File executable = new File("fcmb");
+        System.out.println(executable.getAbsolutePath());
+        String[] command = {executable.getAbsolutePath() + "\\fcmb.exe", executable.getAbsolutePath() + "\\tmp", this.nameTemplate};
         try {
             Process process = Runtime.getRuntime().exec(command, null, executable);
 
@@ -54,17 +55,14 @@ public class FcmbProcess {
      * @throws IOException if a reading error occurs
      * @return whether the process has an error or not
      */
-    private boolean printOutput(InputStream inputStream) throws IOException
-    {
+    private boolean printOutput(InputStream inputStream) throws IOException {
         InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
         try (BufferedReader bufferedReader = new BufferedReader(inputStreamReader)) {
             String line = bufferedReader.readLine();
-            System.out.println(line);
             while (line != null) {
                 if (line.contains("Failed")) {
                     return true;
                 }
-                line = bufferedReader.readLine();
             }
         }
         return false;
